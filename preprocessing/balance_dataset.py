@@ -2,13 +2,16 @@ import jsonlines
 import pandas as pd
 from random import shuffle
 import os
-
+from tqdm import tqdm
+import argparse
+from modify_jsonl import mask_modal_target
 
 def jsonl_to_pd(path, sent_set):
     with jsonlines.open(path, "r") as trainfile:
         for line in trainfile:
             sent_set.add((line['sentence'], line['label'], line['modal_verb']))
     return sent_set
+
 
 def add_sentences_to_balancing_list(mv, label, start, end):
     balancing_list = []
@@ -20,6 +23,7 @@ def add_sentences_to_balancing_list(mv, label, start, end):
             else:
                 break
     return balancing_list
+
 
 def remove_items_from_df(mv, label, start, end, df_train):
     df = df_train[(df_train['label'] == label) & (df_train['modal_verb'] == mv)]
@@ -33,7 +37,7 @@ def remove_items_from_df(mv, label, start, end, df_train):
 
 
 if __name__ == "__main__":
-    arg_parser = ArgumentParser()
+    arg_parser = argparse.ArgumentParser()
 
     arg_parser.add_argument("--datapath", default="../../data", help="path to data directory")
     arg_parser.add_argument("--dataset", default="EPOS_E", help="which dataset to modify (EPOS_E, GME etc.)")
@@ -93,9 +97,7 @@ if __name__ == "__main__":
     df_test.to_json(path_or_buf=os.path.join(args.datapath, args.dataset, test_path), orient='records', lines=True)
     balanced_train[385:].to_json(path_or_buf=os.path.join(args.datapath, args.dataset, dtrain_path), orient='records', lines=True)
     balanced_train[0:385].to_json(path_or_buf=val_path, orient='records', lines=True)
-   
 
-    
     filepath = os.path.join(args.datapath, args.dataset, args.file)
     if args.modification == "mask":
-        mask_modal_target(filepath) 
+        mask_modal_target(filepath)

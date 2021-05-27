@@ -40,8 +40,9 @@ def main(root, jlpath):
                 instances = annotate_sentence(sentence)
                 for instance in instances:
                     f.write(instance)
-            except:
-                print(sentence.attrib["id"])
+            except Exception as e:
+                raise Exception(sentence.attrib["id"], e)
+
 
 if __name__ == "__main__":
     path_to_mpqa = os.path.join(Path().resolve().parent.parent, "data", "R_R_MPQA")

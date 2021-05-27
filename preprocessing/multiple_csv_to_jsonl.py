@@ -15,6 +15,7 @@ def build_jsonl_by_datasource(datapath, dataset, datatype, balanced):
         is_balanced = False if balanced == ".txt" else balanced
         create_validation_set(datapath, balanced=is_balanced, trainfile=output)
 
+
 def write_dict_to_file(root, file, balanced, outfile):
     modal_verb = file.split("_")[0]
     if balanced in file:
@@ -45,11 +46,8 @@ def build_jsonlines_file(datapath, dataset, balanced=".txt"):
 
 def create_validation_set(datapath, trainfile, balanced=None):
     addition = "{}".format(balanced) if balanced else ""
-    # train = "{}/train{}.jsonl".format(datapath, addition)
     validation = trainfile.replace("train", "validation")
-    # validation = "{}/validation{}.jsonl".format(datapath, addition)
     new_train = trainfile.replace("train", "dtrain")
-    # new_train = "{}/dtrain{}.jsonl".format(datapath, addition)
     with jsonlines.open(trainfile, "r") as tr:
         with jsonlines.open(validation, mode="w") as trainf:
             with jsonlines.open(new_train, mode="w") as valf:
@@ -61,6 +59,7 @@ def create_validation_set(datapath, trainfile, balanced=None):
                         trainf.write(line)
                     enum += 1
 
+
 def validate_output(fp):
     labels = set()
     with jsonlines.open(fp, "r") as f:
@@ -68,6 +67,7 @@ def validate_output(fp):
             if line["label"] not in ["ep", "de", "dy"]:
                 print(line)
         print(labels)
+
 
 def single_dataset_to_jsonl(datapath, outfile):
     with jsonlines.open(os.path.join(datapath, outfile), "w") as jlf:
@@ -82,8 +82,9 @@ def single_dataset_to_jsonl(datapath, outfile):
                                 jlf.write({"sentence": line[0].strip(),
                                            "label": line[1].strip(),
                                            "modal_verb": modal_verb})
-                            except:
-                                print(line)
+                            except Exception as e:
+                                raise Exception(line, e)
+
 
 def from_pound_separated_csv_to_jsonl(datapath, infile, all_modal_targets, old_labels):
     dataset_size = 0
@@ -122,7 +123,8 @@ def from_pound_separated_csv_to_jsonl(datapath, infile, all_modal_targets, old_l
                             jltest.write(line)
                         enum += 1
     print(dataset_size, train_size, val_size)
-    
+
+
 if __name__ == "__main__":
     arg_parser = ArgumentParser()
 
@@ -151,7 +153,6 @@ if __name__ == "__main__":
 
     elif "MASC" in args.datapath:
         single_dataset_to_jsonl(args.datapath, "tagged_masc.jsonl")
-
 
     elif "GME" in args.datapath:
         old_labels = {

@@ -1,17 +1,13 @@
-import pandas as pd
 import os
-
 
 ROOT_DIR = os.path.split(os.path.dirname(os.path.abspath(os.getcwd())))[0]
 PROJECT_DIR = os.path.dirname(os.path.abspath(os.getcwd()))
 
 
-
 def create_resolutions_confs(resolution, fold, cuda, ncrf_path, w2v_path=None):
-    if not os.path.isdir(os.path.join(ncrf_path, "config", resolution)):
-        os.mkdir(os.path.join(conf_basepath, "config", resolution))
-    if not os.path.isdir(os.path.join(ncrf_path, "logs", resolution)):
-        os.mkdir(os.path.join(conf_basepath, "logs", resolution))
+    for dir in ["config", "logs"]:
+        if not os.path.isdir(os.path.join(ncrf_path, dir, resolution)):
+            os.mkdir(os.path.join(ncrf_path, dir, resolution))
     conf_path = os.path.join(ncrf_path, "config", resolution, f"modality_{resolution}_fold_{fold}.cuda_{cuda}.train.config")
     train_dir = os.path.join(ROOT_DIR, "data", "GME", resolution, fold, f"train_{resolution}_space.bmes")
     dev_dir = os.path.join(ROOT_DIR, "data", "GME", resolution, fold, f"dev_{resolution}_space.bmes")
@@ -57,12 +53,13 @@ learning_rate=0.015
 
     with open(conf_path) as f:
         f.write(base_conf)
-        
+
+
 def write_decode_config_of_best_epoch(ncrf_path, resolution):
-    logs_path = os.path.join(conf_basepath, "logs", "resolutions", resolution)
+    logs_path = os.path.join(ncrf_path, "logs", "resolutions", resolution)
     for root, dirs, files in os.walk(logs_path):
         for file in files:
-            if ("train" in file) and (resolution in file):
+            if ("train" in str(file)) and (resolution in file):
                 with open(os.path.join(root, file), "r") as f:
                     best_model = "0"
                     for line in f.readlines():
@@ -76,7 +73,7 @@ def write_decode_config_of_best_epoch(ncrf_path, resolution):
                         
                         dset = ".".join(best_model.split(".")[:-2]) + ".dset"
                         conf_name = file.replace(".train.config.log", ".decode.config")
-                        decode_path = os.path.join(conf_basepath, "config", "resolutions", resolution, conf_name)
+                        decode_path = os.path.join(ncrf_path, "config", "resolutions", resolution, conf_name)
                         raw_dir = os.path.join(ROOT_DIR, "data", "GME", resolution, f"test_{resolution}_space.bmes")
                         decoded_file = os.path.join(ROOT_DIR, "data", "GME", resolution, fold, f"decode_{res}_bio.bmes")
                         with open(decode_path, "w") as fw:
@@ -94,7 +91,8 @@ load_model_dir={best_model}
         
 if __name__ == "__main__":
     resolution = "plausibility_others"
-    #change the conf_basepath to the location where NCRF++ is installed. This script assumes config and logs directories inside.
+    # change the conf_basepath to the location where NCRF++ is installed.
+    # This script assumes config and logs directories inside.
     ncrf_path = "$(user.home)/NCRFpp"
     train = True
     decode = False

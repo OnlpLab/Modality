@@ -38,7 +38,6 @@ class ModalityClassificationModel(Model):
         # Initialize weights
         initializer(self)
 
-
     def forward(self,
                 sentence: Dict[str, torch.LongTensor],
                 label: torch.IntTensor = None,
@@ -72,19 +71,13 @@ class ModalityClassificationModel(Model):
             A scalar loss to be optimised.
         """
 
-
         embedded_sentence = self._embedder(sentence)                      # shape ``(batch_size, sent_length, embedding_dim)`
-
         sentence_mask = get_text_field_mask(sentence).float()
-
         encoded_sentence = self._cnn(embedded_sentence,sentence_mask)
-
         concatenated_input = torch.cat([encoded_sentence], dim=1) # shape ``(batch_size, embedding_dim*2)`
-
         # label_logits = self._feed_forward(concatenated_input)
         label_logits = self._feed_forward(encoded_sentence)
         label_probs = F.softmax(label_logits, dim=-1)
-        # TODO: find out how to make multi-class classification
 
         output_dict = {"label_logits": label_logits,
                        "label_probs": label_probs}

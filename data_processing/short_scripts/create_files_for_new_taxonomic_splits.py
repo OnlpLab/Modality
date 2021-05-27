@@ -1,17 +1,16 @@
-import pandas as pd
 import os
 
 
 ROOT_DIR = os.path.split(os.path.dirname(os.path.abspath(os.getcwd())))[0]
 PROJECT_DIR = os.path.dirname(os.path.abspath(os.getcwd()))
-# GME = pd.read_csv(os.path.join(ROOT_DIR, "data", "annotated_gme.csv"), sep="\t", keep_default_na=False)
+
 
 def create_tax_level_files(tax_level_name, replacements_dict, fold):
     for root, dirs, files in os.walk(os.path.join(ROOT_DIR, "data", "GME", "finest", fold)):
         for file in files:
             if "finest_space.bmes" in file:
                 with open(os.path.join(root, file), "r") as fine_f:
-                    fname = file.replace("finest", subset_name)
+                    fname = file.replace("finest", tax_level_name)
                     with open(os.path.join(ROOT_DIR, "data", "GME", tax_level_name, fold, fname), "w") as binary_f:
                         for line in fine_f.readlines():
                             if line:
@@ -21,7 +20,7 @@ def create_tax_level_files(tax_level_name, replacements_dict, fold):
                                     for (super_label, sublabels) in replacements_dict:
                                         if any(x in l[1] for x in sublabels):
                                             binary_f.write(f"{token} {prefix}-{super_label}\n")
-                                except:
+                                except Exception:
                                     binary_f.write(line)
                             else:
                                 binary_f.write(line)
@@ -49,8 +48,7 @@ def create_tax_level_for_test(tax_level_name, replacements_dict):
                 else:
                     binary_f.write(line)
                                 
-                                
-                        
+
 def convert_data_to_taxonomy_level(tax_level_name, replacements_dict):
     gme_basepath = os.path.join(ROOT_DIR, "data", "GME")
     if not os.path.isdir(os.path.join(gme_basepath, tax_level_name)):
@@ -64,12 +62,25 @@ def convert_data_to_taxonomy_level(tax_level_name, replacements_dict):
         
         
 if __name__ == "__main__":
-    first_tier = [
+    modal_not_modal = [("modal", ["teleological", "deontic", "priority", "buletic",
+                         "epistemic", "circumstantial", "ability",
+                         "epistemic_circumstantial", "buletic_teleological", "ability_circumstantial"])]
+
+    priority_vs_plausibility = [
         ("priority", ["teleological", "deontic", "priority", "buletic"]),
         ("plausibility", ["epistemic", "circumstantial", "ability"])
     ]
 
-    third_tier = [
+    fine_grained = [
+        ("deontic", ["deontic", "priority"]),
+        ("intetional", ["buletic_teleological", "teleological", "buletic"]),
+        ("circumstantial", ["circumstantial"]),
+        ("ability", ["ability_circumstantial", "ability"]),
+        ("epistemic", ["epistemic_circumstantial", "epistemic"])
+    ]
+
+
+    finest_grained = [
       ("priority", ["priority", "buletic_teleological"]),
       ("deontic", ["deontic"]),
       ("epistemic", ["epistemic_circumstantial", "epistemic"]),
@@ -79,11 +90,6 @@ if __name__ == "__main__":
       ("circumstantial", ["circumstantial"]),
         ]
 
-    m_not_m = [("modal", ["teleological", "deontic", "priority", "buletic", 
-                         "epistemic", "circumstantial", "ability",
-                         "epistemic_circumstantial", "buletic_teleological", "ability_circumstantial"])]
-
-
     plausibility_others = [
         ("deontic", ["deontic", "priority"]),
         ("intetional", ["buletic_teleological", "teleological", "buletic"]),
@@ -91,22 +97,6 @@ if __name__ == "__main__":
                          "ability", "epistemic"])
     ]
 
-
-    all_unrolled_no_ambiguities = [
-        ("deontic", ["deontic", "priority"]),
-        ("intetional", ["buletic_teleological", "teleological", "buletic"]),    
-        ("circumstantial", ["circumstantial"]),
-        ("ability", ["ability_circumstantial", "ability"]),
-        ("epistemic", ["epistemic_circumstantial", "epistemic"])
-    ]
-
-    
     # this is an example how to call the converter. to add more versions, create a list of tuples as above.
-    convert_data_to_taxonomy_level("plausibility_others", plausibility_others)
+    convert_data_to_taxonomy_level("priority_vs_plausibility", priority_vs_plausibility)
 
-    
-    
-    
-    
-    
-    

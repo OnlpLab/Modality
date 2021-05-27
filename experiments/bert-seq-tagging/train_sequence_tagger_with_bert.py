@@ -37,12 +37,14 @@ def get_logger(filename):
     logger = logging.getLogger('modality_trainer')
     return logger
 
+
 def define_torch_seed(seed=3):
     torch.manual_seed(seed)
     np.random.seed(seed)
     torch.cuda.manual_seed_all(seed)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
+
 
 def split_dev_train_and_test_sets(df, subtype, train_size: float):
     def add_col_for_prediction(row, subtype):
@@ -249,7 +251,6 @@ class BertTrainer(object):
 
 
 class Evaluator():
-
     def __init__(self, trainer, tokenizer):
         self.trainer = trainer
         self.tokenizer = tokenizer
@@ -391,10 +392,7 @@ if __name__ == '__main__':
     script, model_filename, modality_resolution, cuda = sys.argv
     logger = get_logger('../../logs/{}.log'.format(model_filename))
     define_torch_seed(3)
-#     gme_df = pd.read_csv('$(user.home)/modality/data/tokenized_and_tagged_gme.csv', sep='\t', keep_default_na=False)    
-#     dev_df, train_df, test_df = split_dev_train_and_test_sets(gme_df, modality_resolution, 0.8)
 
-    
     dev_df = pd.read_csv("$(user.home)/modality/data/GME/bmes/validation_{}.bmes".format(model_filename), sep=" ", names=["token", "is_modal"], keep_default_na=False)
     train_df = pd.read_csv("$(user.home)/modality/data/GME/bmes/dtrain_{}.bmes".format(model_filename), sep=" ", names=["token", "is_modal"], keep_default_na=False)
     test_df = pd.read_csv("$(user.home)/modality/data/GME/bmes/test_{}.bmes".format(model_filename), sep=" ", names=["token", "is_modal"], keep_default_na=False)
@@ -409,22 +407,14 @@ if __name__ == '__main__':
             found_punct = False
             break
     
-    print("found punct", found_punct)
-#     dev_df = pd.read_csv("$(user.home)/modality/data/GME/bmes/validation_modal-BIOSE-coarse.bmes", sep=" ", names=["token", "is_modal"], keep_default_na=False)
-#     train_df = pd.read_csv("$(user.home)/modality/data/GME/bmes/dtrain_modal-BIOSE-coarse.bmes", sep=" ", names=["token", "is_modal"], keep_default_na=False)
-#     test_df = pd.read_csv("$(user.home)/modality/data/GME/bmes/test_modal-BIOSE-coarse.bmes", sep=" ", names=["token", "is_modal"], keep_default_na=False)
-
-#     bert = BertTrainer(dev_df, train_df, test_df, pre_trained='../resources/wwm_cased_L-24_H-1024_A-16/')
     bert = BertTrainer(dev_df, train_df, test_df, pre_trained='bert-base-cased')
     
     train_sentences = bert.train_getter.get_2Dlist_of_sentences(has_punct=found_punct)
     train_tags = bert.train_getter.get_2Dlist_of_tags(has_punct=found_punct)
     dev_sentences, dev_tags = bert.dev_getter.get_2Dlist_of_sentences(has_punct=found_punct), bert.dev_getter.get_2Dlist_of_tags(has_punct=found_punct)
     test_sentences, test_tags = bert.test_getter.get_2Dlist_of_sentences(has_punct=found_punct), bert.test_getter.get_2Dlist_of_tags(has_punct=found_punct)
-#     print(test_sentences, test_tags)
     tokenizer = BertTokenizer.from_pretrained(bert.pre_trained, do_lower_case=False)
     train_tokenized_texts, train_tokenized_labels = bert.tokenize(train_sentences, train_tags, tokenizer=tokenizer)
-#     print("train_tokenized_texts, train_tokenized_labels", train_tokenized_texts)
     input_ids, tags, attention_masks = bert.pad_sentences_and_labels(train_tokenized_texts, train_tokenized_labels,
                                                                      tokenizer=tokenizer)
     train_dataloader = bert.get_train_dataloader(input_ids, tags, attention_masks)
@@ -433,7 +423,6 @@ if __name__ == '__main__':
     optimizer = Adam(optimizer_grouped_parameters, lr=3e-5)
 
     device, n_gpu = bert.set_cuda(int(cuda))
-    print("device, n_gpu", device, n_gpu)
     logger.info('idx2tag: {} \t tag2idx: {}'.format(bert.idx2tag,bert.tag2idx))
     logger.info('device: {}\t n_gpu{}'.format(device, n_gpu))
     loss = bert.train_model(model, EPOCHS, MAX_GRAD_NORM, optimizer)
@@ -446,8 +435,6 @@ if __name__ == '__main__':
         'loss': loss
     },
         '../../models/{}.pth'.format(model_filename))
-
-
 
     # evaluations
     eval = Evaluator(bert, tokenizer)

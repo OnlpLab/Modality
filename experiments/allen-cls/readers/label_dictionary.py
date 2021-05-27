@@ -1,5 +1,7 @@
 import sys
 import warnings
+'''The following readers (with slight modifications) are taken from athNLP: 
+   https://github.com/athnlp/athnlp-labs/tree/master/athnlp'''
 
 
 class LabelDictionary(dict):
@@ -14,7 +16,6 @@ class LabelDictionary(dict):
 
     def add(self, name):
         if name in self:
-            # warnings.warn('Ignoring duplicated label ' + name)
             label_id = self[name]
         else:
             label_id = len(self.names)
