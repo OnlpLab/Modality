@@ -21,21 +21,28 @@ Code for event-based modality detection, as described in the ACL paper ["*The Po
 
 ## Requirements
 1. `python>=3.6`
-1. `torch=1.3.1`
+1. `torch=1.5.1`
 1. `spacy==2.1.9`
+1. `allennlp==1.0.0`
 
-## Setup
+## Data
+You can find the data for training your own model in the following repository:
+https://github.com/OnlpLab/Modality-Corpus .
 
-
-## Basic Usage
-
-
-## Important Notes
+To convert from the conll format to the format used for training use the following script:
+data_processing/convert_formats.py
 
 ## Training Your Own Model
-
+We used the code from AllenNLP (https://github.com/allenai/allennlp).
+If you want to train your own model you need to specify the train and dev files in the jsonnet configuration files
+in the following folder: Roberta/experiments.
+Afterwards you can run the model with the following command: 
+allennlp train experiments/my_config.jsonnet --include-package my_library -s output_directory
 
 ## Evaluation
+To evaluate your predictions you first need to convert them to a different format using this script:
+Roberta/scripts/format.py
+Afterwards you can use the conll evaluation script: Roberta/scripts/conlleval_orig.py .
 
 ## Citations
 If you use code from repository or our models, please cite the Event-Based-Modality paper:
