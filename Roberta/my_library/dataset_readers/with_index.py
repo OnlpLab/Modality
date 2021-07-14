@@ -3,7 +3,7 @@ import logging
 
 from overrides import overrides
 
-from transformers.tokenization_bert import BertTokenizer
+#from transformers.tokenization_bert import BertTokenizer
 import random
 
 
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 DEFAULT_WORD_TAG_DELIMITER = "###"
 
 
-@DatasetReader.register("bert_sequence_tagging_mod")
+@DatasetReader.register("bert_sequence_tagging_mod_ind")
 class SequenceTaggingDatasetReader(DatasetReader):
     """
     Reads instances from a pretokenised file where each line is in the following format:
@@ -67,17 +67,20 @@ class SequenceTaggingDatasetReader(DatasetReader):
                 # skip blank lines
                 if not line:
                     continue
-
-                tokens_and_tags = [
-                    pair.rsplit(self._word_tag_delimiter, 1)
-                    for pair in line.split(self._token_delimiter)
-                ]
-                tokens = [Token(token) for token, tag in tokens_and_tags]
-                tags = [tag for token, tag in tokens_and_tags]
-                yield self.text_to_instance(tokens, tags)
+                tokens = []
+                tags = []
+                verb_indicator = []
+                for token in line.split(self._token_delimiter):
+                    tok, tag, ind = token.split(self._word_tag_delimiter)
+                    tokens.append(tok)
+                    tags.append(tag)
+                    verb_indicator.append(ind)
+                tokens = [Token(token) for token in tokens]
+                verb_label= [int(ind) for ind in verb_indicator]
+                yield self.text_to_instance(tokens, verb_label,  tags)
 
     def text_to_instance(  # type: ignore
-        self, tokens: List[Token], tags: List[str] = None
+        self, tokens: List[Token],  verb_label: List[int], tags: List[str] = None
     ) -> Instance:
         """
         We take `pre-tokenized` input here, because we don't have a tokenizer in this class.
@@ -88,6 +91,8 @@ class SequenceTaggingDatasetReader(DatasetReader):
         meta_fields = {"words": [x.text for x in tokens]}
         meta_fields["target_tags"] = tags
         fields["metadata"] = MetadataField(meta_fields)
+        verb_indicator = SequenceLabelField(verb_label, sequence)
+        fields["verb_indicator"] = verb_indicator
         if tags is not None:
             fields["tags"] = SequenceLabelField(tags, sequence)
         return Instance(fields)
