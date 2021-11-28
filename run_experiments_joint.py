@@ -56,7 +56,7 @@ def convert_to_eval_format(filename, outfilename, bottom_up=False):
             outfile.write('\n')
     outfile.close()
 
-for exp in ['joint_five']:
+for exp in ['joint_head']:
     for split in [0, 1, 2, 3, 4]:
         try:
             command = "allennlp train experiments/head/"+exp+str(split)+".jsonnet --include-package my_library -s probing_exp/"+exp+str(split)
@@ -65,16 +65,16 @@ for exp in ['joint_five']:
             command = "allennlp train experiments/head/"+exp+str(split)+".jsonnet --include-package my_library -s probing_exp/"+exp+str(split)
             subprocess.run(command, check=True, shell=True)
         try:
-            command = "allennlp predict probing_exp/"+exp+str(split)+"/model.tar.gz data/"+str(split)+"/dev_prejacent_five_head.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file probing_predictions2/"+exp+str(split)
+            command = "allennlp predict probing_exp/"+exp+str(split)+"/model.tar.gz /home/nlp/pyatkiv/workspace/Modality/data/"+str(split)+"/dev_prejacent_five_head.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file probing_predictions2/"+exp+str(split)
             subprocess.run(command, check=True, shell=True)
         except subprocess.CalledProcessError:
-            command = "allennlp predict probing_exp/"+exp+str(split)+"/model.tar.gz data/"+str(split)+"/dev_prejacent_five_head.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file probing_predictions2/"+exp+str(split)
+            command = "allennlp predict probing_exp/"+exp+str(split)+"/model.tar.gz /home/nlp/pyatkiv/workspace/Modality/data/"+str(split)+"/dev_prejacent_five_head.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file probing_predictions2/"+exp+str(split)
             subprocess.run(command, check=True, shell=True)
         try:
-            command = "allennlp predict probing_exp/"+exp+str(split)+"/model.tar.gz data/full/test_prejacent_five_head.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file probing_predictions2/test_"+exp+str(split)
+            command = "allennlp predict probing_exp/"+exp+str(split)+"/model.tar.gz /home/nlp/pyatkiv/workspace/Modality/data/full/test_prejacent_five_head.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file probing_predictions2/test_"+exp+str(split)
             subprocess.run(command, check=True, shell=True)
         except subprocess.CalledProcessError:
-            command = "allennlp predict probing_exp/"+exp+str(split)+"/model.tar.gz data/full/test_prejacent_five_head.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file probing_predictions2/test_"+exp+str(split)
+            command = "allennlp predict probing_exp/"+exp+str(split)+"/model.tar.gz /home/nlp/pyatkiv/workspace/Modality/data/full/test_prejacent_five_head.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file probing_predictions2/test_"+exp+str(split)
             subprocess.run(command, check=True, shell=True)
 
         pred_file = "probing_predictions2/"+exp+str(split)
