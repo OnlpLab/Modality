@@ -39,13 +39,8 @@ class TaggingAccuracy(Metric):
         for pred, gold in zip(predictions, gold_labels):
             for p, g in zip(pred, gold):
                 if p != 'O' and p == g:
-                    print('yay')
-                    print(pred)
-                    print(gold)
                     self.TP += 1
                 elif p != 'O':
-                    print('lol')
-                    print(pred)
                     self.FP += 1
                 elif g != 'O':
                     self.FN += 1
