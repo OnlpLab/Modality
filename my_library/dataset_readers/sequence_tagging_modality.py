@@ -1,10 +1,7 @@
-from typing import Dict, List, Tuple
+from typing import Dict, List
 import logging
 
 from overrides import overrides
-
-from transformers.tokenization_bert import BertTokenizer
-import random
 
 
 from allennlp.common.file_utils import cached_path
