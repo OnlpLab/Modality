@@ -15,8 +15,8 @@ local max_length = 512;
           },
         },
     },
-    "train_data_path": "/home/nlp/pyatkiv/workspace/Modality-Corpus/Data/with_event_span/Fine-Grained/0/train.txt",
-    "validation_data_path": "/home/nlp/pyatkiv/workspace/Modality-Corpus/Data/with_event_span/Fine-Grained/0/dev.txt",
+    "train_data_path": "/home/nlp/pyatkiv/workspace/Modality-Corpus/Data/with_event_span/Fine-Grained/0/train_space.txt",
+    "validation_data_path": "/home/nlp/pyatkiv/workspace/Modality-Corpus/Data/with_event_span/Fine-Grained/0/dev_space.txt",
     "data_loader": {
         "batch_sampler": {
             "type": "bucket",

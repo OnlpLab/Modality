@@ -65,16 +65,16 @@ for exp in ['prejacent']:
             command = "allennlp train experiments/"+exp+str(split)+".jsonnet --include-package my_library -s prejacent_exp/"+exp+str(split)
             subprocess.run(command, check=True, shell=True)
         try:
-            command = "allennlp predict prejacent_exp/"+exp+str(split)+"/model.tar.gz /home/nlp/pyatkiv/workspace/Modality-Corpus/Data/with_event_span/Fine-Grained/"+str(split)+"/dev.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file prejacent_predictions/"+exp+str(split)
+            command = "allennlp predict prejacent_exp/"+exp+str(split)+"/model.tar.gz /home/nlp/pyatkiv/workspace/Modality-Corpus/Data/with_event_span/Fine-Grained/"+str(split)+"/dev_space.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file prejacent_predictions/"+exp+str(split)
             subprocess.run(command, check=True, shell=True)
         except subprocess.CalledProcessError:
-            command = "allennlp predict prejacent_exp/"+exp+str(split)+"/model.tar.gz /home/nlp/pyatkiv/workspace/Modality-Corpus/Data/with_event_span/Fine-Grained/"+str(split)+"/dev.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file prejacent_predictions/"+exp+str(split)
+            command = "allennlp predict prejacent_exp/"+exp+str(split)+"/model.tar.gz /home/nlp/pyatkiv/workspace/Modality-Corpus/Data/with_event_span/Fine-Grained/"+str(split)+"/dev_space.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file prejacent_predictions/"+exp+str(split)
             subprocess.run(command, check=True, shell=True)
         try:
-            command = "allennlp predict prejacent_exp/"+exp+str(split)+"/model.tar.gz /home/nlp/pyatkiv/workspace/Modality-Corpus/Data/with_event_span/Fine-Grained/test.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file prejacent_predictions/test_"+exp+str(split)
+            command = "allennlp predict prejacent_exp/"+exp+str(split)+"/model.tar.gz /home/nlp/pyatkiv/workspace/Modality-Corpus/Data/with_event_span/Fine-Grained/test_space.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file prejacent_predictions/test_"+exp+str(split)
             subprocess.run(command, check=True, shell=True)
         except subprocess.CalledProcessError:
-            command = "allennlp predict prejacent_exp/"+exp+str(split)+"/model.tar.gz /home/nlp/pyatkiv/workspace/Modality-Corpus/Data/with_event_span/Fine-Grained/test.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file prejacent_predictions/test_"+exp+str(split)
+            command = "allennlp predict prejacent_exp/"+exp+str(split)+"/model.tar.gz /home/nlp/pyatkiv/workspace/Modality-Corpus/Data/with_event_span/Fine-Grained/test_space.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file prejacent_predictions/test_"+exp+str(split)
             subprocess.run(command, check=True, shell=True)
 
         pred_file = "prejacent_predictions/"+exp+str(split)
@@ -83,8 +83,8 @@ for exp in ['prejacent']:
             pred_file,
             outfile,
             bottom_up=False)
-        pred_file = "prejacent_predictions//test_"+exp+str(split)
-        outfile = "prejacent_predictions//readable_test_"+exp+str(split)
+        pred_file = "prejacent_predictions/test_"+exp+str(split)
+        outfile = "prejacent_predictions/readable_test_"+exp+str(split)
         convert_to_eval_format(
             pred_file,
             outfile,
