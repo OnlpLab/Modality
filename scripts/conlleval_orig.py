@@ -234,6 +234,6 @@ if __name__ == '__main__':
     usage:     conlleval < file
     """
     e = Eval()
-    file = codecs.open("/Users/valentinapyatkin/PycharmProjects/Modality/scripts/prejacent_predictions/readableprejacent4", 'r').readlines()
+    file = codecs.open("prediction_in_conll_format", 'r').readlines()
 
     e.evaluate_conll_file(file)
