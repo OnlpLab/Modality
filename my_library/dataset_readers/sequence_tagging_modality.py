@@ -65,13 +65,19 @@ class SequenceTaggingDatasetReader(DatasetReader):
                 if not line:
                     continue
 
-                tokens_and_tags = [
-                    pair.rsplit(self._word_tag_delimiter, 1)
-                    for pair in line.split(self._token_delimiter)
-                ]
-                tokens = [Token(token) for token, tag in tokens_and_tags]
-                tags = [tag for token, tag in tokens_and_tags]
-                yield self.text_to_instance(tokens, tags)
+                line = line.split(self._token_delimiter)
+
+                if len(line[0].split(self._word_tag_delimiter)) > 1:
+                    tokens_and_tags = [
+                        pair.rsplit(self._word_tag_delimiter, 1)
+                        for pair in line
+                    ]
+                    tokens = [Token(token) for token, tag in tokens_and_tags]
+                    tags = [tag for token, tag in tokens_and_tags]
+                    yield self.text_to_instance(tokens, tags)
+                else:
+                    tokens = [Token(token) for token in line]
+                    yield self.text_to_instance(tokens)
 
     def text_to_instance(  # type: ignore
         self, tokens: List[Token], tags: List[str] = None
