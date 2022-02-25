@@ -56,35 +56,35 @@ def convert_to_eval_format(filename, outfilename, bottom_up=False):
             outfile.write('\n')
     outfile.close()
 
-for exp in ['joint_head']:
+for exp in ['tagging']:
     for split in [0, 1, 2, 3, 4]:
         try:
-            command = "allennlp train experiments/head/"+exp+str(split)+".jsonnet --include-package my_library -s probing_exp/"+exp+str(split)
+            command = "allennlp train experiments/"+exp+str(split)+".jsonnet --include-package my_library -s probing_exp/"+exp+str(split)
             subprocess.run(command, check=True, shell=True)
         except subprocess.CalledProcessError:
-            command = "allennlp train experiments/head/"+exp+str(split)+".jsonnet --include-package my_library -s probing_exp/"+exp+str(split)
+            command = "allennlp train experiments/"+exp+str(split)+".jsonnet --include-package my_library -s tagging/"+exp+str(split)
             subprocess.run(command, check=True, shell=True)
         try:
-            command = "allennlp predict probing_exp/"+exp+str(split)+"/model.tar.gz /home/nlp/pyatkiv/workspace/Modality/data/"+str(split)+"/dev_prejacent_five_head.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file probing_predictions2/"+exp+str(split)
+            command = "allennlp predict tagging/"+exp+str(split)+"/model.tar.gz /home/nlp/pyatkiv/workspace/Modality-Corpus/Data/Data/Fine-Grained/"+str(split)+"/dev_space.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file tagging_predictions/"+exp+str(split)
             subprocess.run(command, check=True, shell=True)
         except subprocess.CalledProcessError:
-            command = "allennlp predict probing_exp/"+exp+str(split)+"/model.tar.gz /home/nlp/pyatkiv/workspace/Modality/data/"+str(split)+"/dev_prejacent_five_head.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file probing_predictions2/"+exp+str(split)
+            command = "allennlp predict tagging/"+exp+str(split)+"/model.tar.gz /home/nlp/pyatkiv/workspace/Modality-Corpus/Data/Data/Fine-Grained/"+str(split)+"/dev_space.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file tagging_predictions/"+exp+str(split)
             subprocess.run(command, check=True, shell=True)
         try:
-            command = "allennlp predict probing_exp/"+exp+str(split)+"/model.tar.gz /home/nlp/pyatkiv/workspace/Modality/data/full/test_prejacent_five_head.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file probing_predictions2/test_"+exp+str(split)
+            command = "allennlp predict tagging/"+exp+str(split)+"/model.tar.gz /home/nlp/pyatkiv/workspace/Modality-Corpus/Data/Data/Fine-Grained/test_space.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file tagging_predictions/test_"+exp+str(split)
             subprocess.run(command, check=True, shell=True)
         except subprocess.CalledProcessError:
-            command = "allennlp predict probing_exp/"+exp+str(split)+"/model.tar.gz /home/nlp/pyatkiv/workspace/Modality/data/full/test_prejacent_five_head.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file probing_predictions2/test_"+exp+str(split)
+            command = "allennlp predict tagging/"+exp+str(split)+"/model.tar.gz /home/nlp/pyatkiv/workspace/Modality-Corpus/Data/Data/Fine-Grained/test_space.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file tagging_predictions/test_"+exp+str(split)
             subprocess.run(command, check=True, shell=True)
 
-        pred_file = "probing_predictions2/"+exp+str(split)
-        outfile = "probing_predictions2/readable"+exp+str(split)
+        pred_file = "tagging_predictions/"+exp+str(split)
+        outfile = "tagging_predictions/readable"+exp+str(split)
         convert_to_eval_format(
             pred_file,
             outfile,
             bottom_up=False)
-        pred_file = "probing_predictions2/test_"+exp+str(split)
-        outfile = "probing_predictions2/readable_test_"+exp+str(split)
+        pred_file = "tagging_predictions/test_"+exp+str(split)
+        outfile = "tagging_predictions/readable_test_"+exp+str(split)
         convert_to_eval_format(
             pred_file,
             outfile,

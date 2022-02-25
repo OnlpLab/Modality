@@ -26,7 +26,10 @@ def convert_to_space(input_file, output_file):
             sentence = []
             prev_id = row['sentence_id']
         else:
-            sentence.append(row['token']+'###'+row['gold_modal'])
+            gold_modal = row['gold_modal']
+            if "_" in gold_modal:
+                gold_modal = '-'.join(gold_modal.split('_'))
+            sentence.append(row['token']+'###'+gold_modal)
             prev_id = row['sentence_id']
 
 
