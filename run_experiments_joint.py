@@ -59,7 +59,7 @@ def convert_to_eval_format(filename, outfilename, bottom_up=False):
 for exp in ['tagging']:
     for split in [0, 1, 2, 3, 4]:
         try:
-            command = "allennlp train experiments/"+exp+str(split)+".jsonnet --include-package my_library -s probing_exp/"+exp+str(split)
+            command = "allennlp train experiments/"+exp+str(split)+".jsonnet --include-package my_library -s tagging/"+exp+str(split)
             subprocess.run(command, check=True, shell=True)
         except subprocess.CalledProcessError:
             command = "allennlp train experiments/"+exp+str(split)+".jsonnet --include-package my_library -s tagging/"+exp+str(split)
