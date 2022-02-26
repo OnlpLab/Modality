@@ -65,16 +65,16 @@ for exp in ['tagging']:
             command = "allennlp train experiments/"+exp+str(split)+".jsonnet --include-package my_library -s tagging/"+exp+str(split)
             subprocess.run(command, check=True, shell=True)
         try:
-            command = "allennlp predict tagging/"+exp+str(split)+"/model.tar.gz /home/nlp/pyatkiv/workspace/Modality-Corpus/Data/Data/Fine-Grained/"+str(split)+"/dev_space.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file tagging_predictions/"+exp+str(split)
+            command = "allennlp predict tagging/"+exp+str(split)+"/model.tar.gz /home/nlp/pyatkiv/workspace/Modality-Corpus/Data/Fine-Grained/"+str(split)+"/dev_space.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file tagging_predictions/"+exp+str(split)
             subprocess.run(command, check=True, shell=True)
         except subprocess.CalledProcessError:
-            command = "allennlp predict tagging/"+exp+str(split)+"/model.tar.gz /home/nlp/pyatkiv/workspace/Modality-Corpus/Data/Data/Fine-Grained/"+str(split)+"/dev_space.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file tagging_predictions/"+exp+str(split)
+            command = "allennlp predict tagging/"+exp+str(split)+"/model.tar.gz /home/nlp/pyatkiv/workspace/Modality-Corpus/Data/Fine-Grained/"+str(split)+"/dev_space.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file tagging_predictions/"+exp+str(split)
             subprocess.run(command, check=True, shell=True)
         try:
-            command = "allennlp predict tagging/"+exp+str(split)+"/model.tar.gz /home/nlp/pyatkiv/workspace/Modality-Corpus/Data/Data/Fine-Grained/test_space.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file tagging_predictions/test_"+exp+str(split)
+            command = "allennlp predict tagging/"+exp+str(split)+"/model.tar.gz /home/nlp/pyatkiv/workspace/Modality-Corpus/Data/Fine-Grained/test_space.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file tagging_predictions/test_"+exp+str(split)
             subprocess.run(command, check=True, shell=True)
         except subprocess.CalledProcessError:
-            command = "allennlp predict tagging/"+exp+str(split)+"/model.tar.gz /home/nlp/pyatkiv/workspace/Modality-Corpus/Data/Data/Fine-Grained/test_space.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file tagging_predictions/test_"+exp+str(split)
+            command = "allennlp predict tagging/"+exp+str(split)+"/model.tar.gz /home/nlp/pyatkiv/workspace/Modality-Corpus/Data/Fine-Grained/test_space.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file tagging_predictions/test_"+exp+str(split)
             subprocess.run(command, check=True, shell=True)
 
         pred_file = "tagging_predictions/"+exp+str(split)
