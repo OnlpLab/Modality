@@ -234,6 +234,6 @@ if __name__ == '__main__':
     usage:     conlleval < file
     """
     e = Eval()
-    file = codecs.open("/Users/valentinapyatkin/PycharmProjects/Modality/scripts/tagging_predictions/readabletagging4", 'r').readlines()
+    file = codecs.open("/Users/valentinapyatkin/PycharmProjects/Modality/scripts/tagging_predictions/readabletagging_joint4", 'r').readlines()
 
     e.evaluate_conll_file(file)
