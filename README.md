@@ -32,6 +32,18 @@ https://github.com/OnlpLab/Modality-Corpus .
 To convert from the conll format to the format used for training use the following script:
 data_processing/convert_formats.py
 
+## Making Predictions with a Trained Model
+To make predictions with a model that we trained on the data (since we are doing 5-fold CV, we chose the models with the best performance on dev here), do the following:
+- Have a virtual environment with AllenNLP version 2.0.0.
+- Clone this repo.
+- Download the models: 
+  - [Fine-grained Modality Triggers:](https://nlp.biu.ac.il/~pyatkiv/modalitymodel/fine_grained_trigger_tagging.tar.gz)
+  - [Fine-grained Modality Triggers + Event Spans:](https://nlp.biu.ac.il/~pyatkiv/modalitymodel/fine_grained_trigger_event_span_tagging.tar.gz)
+  - [Fine-grained Modality Triggers + Event Heads:](https://nlp.biu.ac.il/~pyatkiv/modalitymodel/fine_grained_trigger_event_head_tagging.tar.gz)
+- Be at the root of the Modality repo
+- Run the following command: allennlp predict path_to_downloaded_model/model.tar.gz data_you_want_to_predict_on.txt --include-package my_library --use-dataset-reader --cuda-device 0 --output-file file_you_want_to_predict_to.jsonl
+- The file for prediction should have a sentence per line, with the tokenized word separated by whitespace. (e.g.: He should go home . )
+
 ## Training Your Own Model
 We used the code from AllenNLP (https://github.com/allenai/allennlp).
 If you want to train your own model you need to specify the train and dev files in the jsonnet configuration files
