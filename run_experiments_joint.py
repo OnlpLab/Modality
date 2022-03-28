@@ -56,7 +56,7 @@ def convert_to_eval_format(filename, outfilename, bottom_up=False):
             outfile.write('\n')
     outfile.close()
 
-for exp in ['tagging_trigger']:
+for exp in ['tagging_joint']:
     for split in [0, 1, 2, 3, 4]:
         try:
             command = "allennlp train experiments/"+exp+str(split)+".jsonnet --include-package my_library -s tagging_trigger/"+exp+str(split)
